@@ -115,7 +115,7 @@ const AnimeCard = ({
                     <div style={{ display: "flex" }}>
                         <div
                             style={{
-                                fontSize: 32, lineHeight: 1, cursor: "pointer", display: '-webkit-box',
+                                fontSize: 32, cursor: "pointer", display: '-webkit-box',
                                 WebkitBoxOrient: 'vertical',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -148,7 +148,7 @@ const AnimeCard = ({
                             <div> {`start: ${start[0]}-${start[1]}-${start[2]}`} </div>
                             <div> {`end: ${end[0]}-${end[1]}-${end[2]}`} </div>
                         </div>
-                        <div> {`${dateDiffInDays} days - ${score}`} </div>
+                        <div> {`${dateDiffInDays} days - ${score}/10`} </div>
 
                         {/* read more read less button */}
                         <div style={{ display: "flex" }}>
@@ -249,6 +249,11 @@ const AnimeList = () => {
                     ? new Date(anime1.start) - new Date(anime2.start)
                     : new Date(anime2.start) - new Date(anime1.start);
             }
+            else if (key === "score") {
+                return asc == "asc"
+                    ? anime1.score - anime2.score
+                    : anime2.score - anime1.score;
+            }
         };
 
         tempPlanToWatchList.sort(func);
@@ -293,54 +298,73 @@ const AnimeList = () => {
         loadAnimeList();
     }, []);
 
+
+    let eaeList = [
+        {
+            label: "Name",
+            sortBy: "name",
+        },
+        {
+            label: "End Date",
+            sortBy: "end",
+        },
+        {
+            label: "Score",
+            sortBy: "score",
+        },
+    ];
+
+    const searchAndSortJsx = eaeList.map((el) => {
+        return (<>
+            <Col>
+                <Row style={{textAlign: "center"}}>
+                    <Label>{el.label}</Label>
+                </Row>
+                <Row style={{gap: 20}}>
+                    <Col>
+                        <Row>
+                            <Button
+                                style={{
+                                    backgroundColor: flrowoUtils.baseColor,
+                                    borderColor: flrowoUtils.highlightsColor
+                                }}
+                                onClick={() => { sortAnimeList(el.sortBy, "asc") }}>
+                                Asc
+                            </Button>
+                        </Row>
+                    </Col>
+                    <Col>
+                        <Row>
+                            <Button
+                                style={{
+                                    backgroundColor: flrowoUtils.baseColor,
+                                    borderColor: flrowoUtils.highlightsColor
+                                }}
+                                onClick={() => { sortAnimeList(el.sortBy, "desc") }}>
+                                Desc
+                            </Button>
+                        </Row>
+                    </Col>
+                </Row>
+            </Col>
+        </>);
+    });
+
     return (<>
         <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
-            <Row>
-                <Label>filters</Label>
+
+            {/* filters, search, sorters */}
+            <Row style={{ gap: 20, backgroundColor: flrowoUtils.baseColor, padding: 10, borderRadius: 10, boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
                 <Col>
-                    <Input value={searchInputValue} onChange={filter} style={{ color: "white", borderColor: "#fff2", backgroundColor: flrowoUtils.appBaseCssColor }} />
+                    <Row style={{textAlign: "center"}}>
+                        <Label>Seach</Label>
+                    </Row>
+                    <Row>
+                        <Input value={searchInputValue} onChange={filter} style={{ display: "inline", color: "white", borderColor: flrowoUtils.highlightsColor, backgroundColor: flrowoUtils.baseColor }} />
+                    </Row>
                 </Col>
-                <br/>
-                <br/>
-                <Label>sorters</Label>
-                <Col>
-                    <Button
-                        style={{
-                            backgroundColor: flrowoUtils.appBaseCssColor,
-                            borderColor: flrowoUtils.appBaseCssColor 
-                        }}
-                        onClick={() => { sortAnimeList("name", "desc") }}>
-                        name desc
-                    </Button>
-                    
-                    <Button
-                        style={{
-                            backgroundColor: flrowoUtils.appBaseCssColor,
-                            borderColor: flrowoUtils.appBaseCssColor 
-                        }}
-                        onClick={() => { sortAnimeList("name", "asc") }}>
-                        name asc
-                    </Button>
 
-                    <Button
-                        style={{
-                            backgroundColor: flrowoUtils.appBaseCssColor,
-                            borderColor: flrowoUtils.appBaseCssColor 
-                        }}
-                        onClick={() => { sortAnimeList("end", "desc") }}>
-                        end desc
-                    </Button>
-
-                    <Button
-                        style={{
-                            backgroundColor: flrowoUtils.appBaseCssColor,
-                            borderColor: flrowoUtils.appBaseCssColor 
-                        }}
-                        onClick={() => { sortAnimeList("end", "asc") }}>
-                        end asc
-                    </Button>
-
-                </Col>
+                {searchAndSortJsx}
 
             </Row>
 
