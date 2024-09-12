@@ -1,7 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 
+const useMediaQuery = (query) => {
+    // testing if less than 500px
+    const mediaMatch = window.matchMedia(query);
+    const [matches, setMatches] = useState(mediaMatch.matches);
+
+    useEffect(() => {
+        const handler = e => setMatches(e.matches);
+        mediaMatch.addListener(handler);
+        return () => mediaMatch.removeListener(handler);
+    });
+    return matches;
+};
+
 const NavigationBar = ({ setOpenPage }) => {
+    
+    const isLessThan500px = useMediaQuery('(min-width: 500px)');
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +36,7 @@ const NavigationBar = ({ setOpenPage }) => {
     });
 
     return (
-        <Navbar fixed='top' dark={true} expand={true} style={{ backgroundColor: "#25202baa", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
+        <Navbar fixed='top' dark={true} expand={isLessThan500px == false} style={{ backgroundColor: "#25202baa", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
             <NavbarBrand style={{ cursor: 'pointer' }} onClick={() => setOpenPage(null)}>flrowo</NavbarBrand>
             <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
             <Collapse isOpen={isOpen} navbar>

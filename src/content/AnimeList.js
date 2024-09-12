@@ -3,6 +3,19 @@ import { Button, Col, Input, Label, Row } from 'reactstrap';
 import axios from 'axios';
 import flrowoUtils from '../utils/utils';
 
+const useMediaQuery = (query) => {
+    // testing if less than 500px
+    const mediaMatch = window.matchMedia(query);
+    const [matches, setMatches] = useState(mediaMatch.matches);
+
+    useEffect(() => {
+        const handler = e => setMatches(e.matches);
+        mediaMatch.addListener(handler);
+        return () => mediaMatch.removeListener(handler);
+    });
+    return matches;
+};
+
 const AnimeCard = ({
     isWatched,
     name,
@@ -113,18 +126,20 @@ const AnimeCard = ({
                 <div ref={commentDivRef} style={{ flexGrow: 1 }}>
 
                     <div style={{ display: "flex" }}>
-                        <div
-                            style={{
-                                fontSize: 32, cursor: "pointer", display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                WebkitLineClamp: 2,
-                                lineClamp: 2
-                            }}
-                            onClick={() => { window.location = link }}>
-                            {name + (media != "" ? " (" + media + ")" : "")}
-                        </div>
+                        <a style={{textDecoration: "none"}} href={link}>
+                            <div
+                                style={{
+                                    fontSize: 32, cursor: "pointer", display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: 1,
+                                    lineClamp: 1
+                                }}
+                            >
+                                {name + (media != "" ? " (" + media + ")" : "")}
+                            </div>
+                        </a>
                     </div>
 
                     <hr style={{ margin: "5px 0" }} />
@@ -172,6 +187,9 @@ const AnimeCard = ({
 }
 
 const AnimeList = () => {
+    
+    // testing if less than 500px
+    const isLessThan = useMediaQuery('(min-width: 500px)');
 
     const [planToWatchList, setPlanToWatchList] = useState([]);
     const [planToWatchListToShow, setPlanToWatchListToShow] = useState([]);
@@ -314,49 +332,13 @@ const AnimeList = () => {
         },
     ];
 
-    const searchAndSortJsx = eaeList.map((el) => {
-        return (<>
-            <Col>
-                <Row style={{textAlign: "center"}}>
-                    <Label>{el.label}</Label>
-                </Row>
-                <Row style={{gap: 20}}>
-                    <Col>
-                        <Row>
-                            <Button
-                                style={{
-                                    backgroundColor: flrowoUtils.baseColor,
-                                    borderColor: flrowoUtils.highlightsColor
-                                }}
-                                onClick={() => { sortAnimeList(el.sortBy, "asc") }}>
-                                Asc
-                            </Button>
-                        </Row>
-                    </Col>
-                    <Col>
-                        <Row>
-                            <Button
-                                style={{
-                                    backgroundColor: flrowoUtils.baseColor,
-                                    borderColor: flrowoUtils.highlightsColor
-                                }}
-                                onClick={() => { sortAnimeList(el.sortBy, "desc") }}>
-                                Desc
-                            </Button>
-                        </Row>
-                    </Col>
-                </Row>
-            </Col>
-        </>);
-    });
-
     return (<>
         <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
 
             {/* filters, search, sorters */}
             <Row style={{ gap: 20, backgroundColor: flrowoUtils.baseColor, padding: 10, borderRadius: 10, boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
                 <Col>
-                    <Row style={{textAlign: "center"}}>
+                    <Row style={{ textAlign: "center" }}>
                         <Label>Seach</Label>
                     </Row>
                     <Row>
@@ -364,12 +346,47 @@ const AnimeList = () => {
                     </Row>
                 </Col>
 
-                {searchAndSortJsx}
+                {eaeList.map((el) => {
+                    return (<>
+                        <Col>
+                            <Row style={{ textAlign: "center" }}>
+                                <Label>{el.label}</Label>
+                            </Row>
+                            <Row style={{ gap: 20 }}>
+                                <Col>
+                                    <Row>
+                                        <Button
+                                            style={{
+                                                backgroundColor: flrowoUtils.baseColor,
+                                                borderColor: flrowoUtils.highlightsColor
+                                            }}
+                                            onClick={() => { sortAnimeList(el.sortBy, "asc") }}>
+                                            Asc
+                                        </Button>
+                                    </Row>
+                                </Col>
+                                <Col>
+                                    <Row>
+                                        <Button
+                                            style={{
+                                                backgroundColor: flrowoUtils.baseColor,
+                                                borderColor: flrowoUtils.highlightsColor
+                                            }}
+                                            onClick={() => { sortAnimeList(el.sortBy, "desc") }}>
+                                            Desc
+                                        </Button>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </>);
+                })}
 
             </Row>
 
             <br />
 
+            {/* TODO make possible for categories to collapse and save its state somewhere, using useState, or url (later is cringe..) */}
             <h1>{`PLAN TO WATCH (${planToWatchListToShow.length})`}</h1>
             {planToWatchListToShow.map((anime, index) => {
                 return (
