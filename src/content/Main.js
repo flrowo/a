@@ -43,7 +43,7 @@ const Main = () => {
     <div className="background" />
     <NavigationBar setOpenPage={setOpenPage} />
 
-    <Container style={{ marginTop: 100, marginBottom: 100 }}>
+    <Container style={{ marginTop: 80, marginBottom: 20 }}>
       {
         isSocialsOpen ? <Socials /> :
           isAnimeListOpen ? <AnimeList /> :

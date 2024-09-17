@@ -28,7 +28,13 @@ const NavigationBar = ({ setOpenPage }) => {
     let navList = navJson.map((navObj) => {
         return (<>
             <NavItem key={navObj.url}>
-                <NavLink style={{ cursor: 'pointer' }} onClick={() => setOpenPage(navObj.url)}>
+                <NavLink
+                    style={{ cursor: 'pointer' }}
+                    onClick={ () => {
+                        setIsOpen(false);
+                        setOpenPage(navObj.url);
+                    }}
+                >
                     {navObj.label}
                 </NavLink>
             </NavItem>
@@ -36,7 +42,7 @@ const NavigationBar = ({ setOpenPage }) => {
     });
 
     return (
-        <Navbar fixed='top' dark={true} expand={isLessThan500px == false} style={{ backgroundColor: "#25202baa", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
+        <Navbar fixed='top' dark={true} expand={isLessThan500px == true} style={{ backgroundColor: "#25202baa", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
             <NavbarBrand style={{ cursor: 'pointer' }} onClick={() => setOpenPage(null)}>flrowo</NavbarBrand>
             <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
             <Collapse isOpen={isOpen} navbar>
