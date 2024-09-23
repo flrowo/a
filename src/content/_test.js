@@ -2,43 +2,37 @@ import React, { useEffect, useState } from 'react';
 
 const BPMCounterComponent = () => {
     const [bpm, setBpm] = useState(null);
+    const [keysPressed, setKeysPressed] = useState(null);
 
     let timestampList = [];
 
     useEffect(() => {
 
-        const resetBpm = () => {
-            console.log("reset");
-            timestampList = [];
-            setBpm(null);
-        }
-
         const handleKeyPress = (e) => {
             // cancels if tabs, enters, alts, shifts
             if (e.key.length > 1) return;
-            
+
             timestampList.push(Date.now());
-            console.log(timestampList);
 
             let beats = timestampList.length;
-            
-            if(beats >= 2){
 
-                let timeSinceLastPressedMs = timestampList[beats-1] - timestampList[beats-2];
-                
+            if (beats >= 2) {
+
+                let timeSinceLastPressedMs = timestampList[beats - 1] - timestampList[beats - 2];
+
                 if (Number(timeSinceLastPressedMs) > 2000) {
-                    resetBpm();
+                    timestampList = [Date.now()]; // resets timestampList
                 } else {
                     // sets bpm
-                    
+
                     let periodSumMs = 0;
-                    
+
                     let i = 1;
 
-                    while( i < beats ){
+                    while (i < beats) {
 
                         let timestampA = timestampList[i];
-                        let timestampB = timestampList[i-1];
+                        let timestampB = timestampList[i - 1];
 
                         let periodMs = timestampA - timestampB;
                         periodSumMs += periodMs;
@@ -46,28 +40,62 @@ const BPMCounterComponent = () => {
                     };
 
                     let minutes = periodSumMs / 1000 / 60;
-                    let tempBpm = (beats-1) / minutes;
-
-                    console.log("tempBpm", tempBpm)
-                    console.log("beats", beats)
+                    let tempBpm = (beats - 1) / minutes;
 
                     setBpm(tempBpm);
                 }
             }
+            setKeysPressed(timestampList.length);
         };
 
         window.addEventListener('keydown', handleKeyPress);
-        
+
         return () => { window.removeEventListener('keydown', handleKeyPress); };
     }, []);
 
     return (
         <div>
             <h3>Press any key!</h3>
-            {bpm && <p>You pressed: {bpm.toFixed(2)}</p>}
+            {bpm && <p>bpm: {bpm == 0 ? "-" : bpm.toFixed(2)}</p>}
+            {keysPressed && <p>keysPressed: {keysPressed == 0 ? "-" : keysPressed}</p>}
         </div>
     );
 };
+
+const Counter = () => {
+    let count = 0;
+    const [eae, setEae] = useState(0);
+    console.log("count", count);
+
+    const buttonFunc = (n) => {
+        if (n == 1) {
+            count = count + 1;
+        }
+        if (n == 0) {
+            count = 0;
+        }
+        if (n == -1) {
+            count = count - 1;
+        }
+    }
+
+    const eaeFunc = () => {
+        setEae(eae + 1);
+    }
+
+    return (
+        <div>
+            <p>{count}</p>
+            <div>
+                <button className="btn btn-danger" onClick={() => { buttonFunc(-1) }}>-</button>
+                <button className="btn btn-warning" onClick={() => { buttonFunc(0) }}>0</button>
+                <button className="btn btn-success" onClick={() => { buttonFunc(1) }}>+</button>
+            </div>
+            <button className="btn btn-secondary" onClick={eaeFunc}>eae</button>
+            {eae}
+        </div>
+    );
+}
 
 const TestComponent = () => {
 
@@ -101,7 +129,7 @@ const TestComponent = () => {
 
 
     return (<>
-        
+
         <div style={containerStyle}>
             <div style={backgroundStyle}></div>
             <div style={contentStyle}>
@@ -109,7 +137,9 @@ const TestComponent = () => {
             </div>
         </div>
 
-        <BPMCounterComponent/>
+        <BPMCounterComponent />
+
+        <Counter />
 
     </>);
 };
