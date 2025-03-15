@@ -20,13 +20,13 @@ const NavigationBar = ({ setOpenPage }) => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    let navJson = [
+    const navJson = [
         { url: "animelist", label: "Anime List" },
         { url: "socials", label: "Socials/Contact" },
     ]
 
     let navList = navJson.map((navObj) => {
-        return (<>
+        return (
             <NavItem key={navObj.url}>
                 <NavLink
                     style={{ cursor: 'pointer' }}
@@ -38,7 +38,7 @@ const NavigationBar = ({ setOpenPage }) => {
                     {navObj.label}
                 </NavLink>
             </NavItem>
-        </>);
+        );
     });
 
     return (
