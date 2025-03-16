@@ -1,57 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { Collapse, Container, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
-import "./Main.css";
+import React, { useCallback, useEffect, useState } from 'react';
+import { Container } from 'reactstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Socials from './Socials';
 import AnimeList from './AnimeList';
 import NavigationBar from '../components/NavigationBar';
 import TestComponent from './_test';
+import ReisenBG from '../assets/backgrounds/reisen-bg/Reisen';
 
 const Main = () => {
-  const navigate = useNavigate();
+    // const [search, setSearch] = useSearchParams();
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const startPageStr = "startPage";
-  const startPage = queryParams.get(startPageStr);
+    const navigate = useNavigate();
 
-  // booleans for each page
-  const [isSocialsOpen, setIsSocialsOpen] = useState(false);
-  const [isAnimeListOpen, setIsAnimeListOpen] = useState(false);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const startPageStr = "startPage";
+    const startPage = queryParams.get(startPageStr);
 
-  const setOpenPage = (pageRefStr) => {
-    closeAllPages();
+    // booleans for each page
+    const [isSocialsOpen, setIsSocialsOpen] = useState(false);
+    const [isAnimeListOpen, setIsAnimeListOpen] = useState(false);
 
-    if (pageRefStr == "socials") { setIsSocialsOpen(true); navigate(`?${startPageStr}=${pageRefStr}`); }
-    if (pageRefStr == "animelist") { setIsAnimeListOpen(true); navigate(`?${startPageStr}=${pageRefStr}`); }
-  }
+    const closeAllPages = useCallback(() => {
+        navigate(``);
+        setIsSocialsOpen(false);
+        setIsAnimeListOpen(false);
+    }, [navigate, setIsSocialsOpen, setIsAnimeListOpen])
 
-  const closeAllPages = () => {
-    navigate(``);
-    setIsSocialsOpen(false);
-    setIsAnimeListOpen(false);
-  }
+    const setOpenPage = useCallback((pageRefStr) => {
+        closeAllPages();
 
-  useEffect(() => {
-    console.log(startPage);
-    setOpenPage(startPage);
-  }, [startPage]);
+        if (pageRefStr === "socials") { setIsSocialsOpen(true); navigate(`?${startPageStr}=${pageRefStr}`); }
+        if (pageRefStr === "animelist") { setIsAnimeListOpen(true); navigate(`?${startPageStr}=${pageRefStr}`); }
+    }, [closeAllPages, setIsSocialsOpen, setIsAnimeListOpen, navigate])
 
-  return (<div style={{userSelect: "unset"}}>
-    <div className="background-underlay" />
-    <div className="background" />
-    <NavigationBar setOpenPage={setOpenPage} />
+    useEffect(() => {
+        console.log(startPage);
+        setOpenPage(startPage);
+    }, [startPage, setOpenPage]);
 
-    <Container style={{ marginTop: 80, marginBottom: 20 }}>
-      {
-        isSocialsOpen ? <Socials /> :
-          isAnimeListOpen ? <AnimeList /> :
-            <TestComponent/>
-      }
-    </Container>
+    return (
+        <div>
+            <div><ReisenBG/></div>
+            <NavigationBar setOpenPage={setOpenPage} />
 
-  </div>);
+            <Container className='mt-20 mb-5'>
+                {
+                    isSocialsOpen ? <Socials /> :
+                        isAnimeListOpen ? <AnimeList /> :
+                            <TestComponent />
+                }
+            </Container>
+
+        </div>
+    );
 }
 
 export default Main;

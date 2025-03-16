@@ -4,9 +4,8 @@ const BPMCounterComponent = () => {
     const [bpm, setBpm] = useState(null);
     const [keysPressed, setKeysPressed] = useState(null);
 
-    let timestampList = [];
-
     useEffect(() => {
+        let timestampList = [];
 
         const handleKeyPress = (e) => {
             // cancels if tabs, enters, alts, shifts
@@ -56,8 +55,8 @@ const BPMCounterComponent = () => {
     return (
         <div>
             <h3>Press any key!</h3>
-            {bpm && <p>bpm: {bpm == 0 ? "-" : bpm.toFixed(2)}</p>}
-            {keysPressed && <p>keysPressed: {keysPressed == 0 ? "-" : keysPressed}</p>}
+            {bpm && <p>bpm: {bpm === 0 ? "-" : bpm.toFixed(2)}</p>}
+            {keysPressed && <p>keysPressed: {keysPressed === 0 ? "-" : keysPressed}</p>}
         </div>
     );
 };
@@ -68,13 +67,13 @@ const Counter = () => {
     console.log("count", count);
 
     const buttonFunc = (n) => {
-        if (n == 1) {
+        if (n === 1) {
             count = count + 1;
         }
-        if (n == 0) {
+        if (n === 0) {
             count = 0;
         }
-        if (n == -1) {
+        if (n === -1) {
             count = count - 1;
         }
     }

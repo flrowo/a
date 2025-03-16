@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 
 const useMediaQuery = (query) => {
-    // testing if less than 500px
     const mediaMatch = window.matchMedia(query);
     const [matches, setMatches] = useState(mediaMatch.matches);
 
@@ -14,55 +13,29 @@ const useMediaQuery = (query) => {
     return matches;
 };
 
+const navs = [
+    { url: "animelist", label: "Anime List" },
+    { url: "socials", label: "Socials/Contact" },
+]
+
 const NavigationBar = ({ setOpenPage }) => {
-    
-    const isLessThan500px = useMediaQuery('(min-width: 500px)');
-
+    // testing if less than 500px
+    const isMobile = useMediaQuery('(min-width: 500px)');
     const [isOpen, setIsOpen] = useState(false);
-
-    const navJson = [
-        { url: "animelist", label: "Anime List" },
-        { url: "socials", label: "Socials/Contact" },
-    ]
-
-    let navList = navJson.map((navObj) => {
-        return (
-            <NavItem key={navObj.url}>
-                <NavLink
-                    style={{ cursor: 'pointer' }}
-                    onClick={ () => {
-                        setIsOpen(false);
-                        setOpenPage(navObj.url);
-                    }}
-                >
-                    {navObj.label}
-                </NavLink>
-            </NavItem>
-        );
-    });
-
     return (
-        <Navbar fixed='top' dark={true} expand={isLessThan500px == true} style={{ backgroundColor: "#25202baa", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)" }}>
-            <NavbarBrand style={{ cursor: 'pointer' }} onClick={() => setOpenPage(null)}>flrowo</NavbarBrand>
+        <Navbar fixed='top' dark={true} expand={isMobile === true} className="bg-[#25202baa] shadow-[0_4px_8px_0_rgba(0,0,0,0.2)]">
+            <NavbarBrand className="cursor-pointer" onClick={() => setOpenPage(null)}>flrowo</NavbarBrand>
             <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
             <Collapse isOpen={isOpen} navbar>
-                <Nav className="me-auto" navbar>
-
-                    {navList}
-
-                    {/* <UncontrolledDropdown nav inNavbar>
-                        <DropdownToggle nav caret>
-                            Options
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem>Option 1</DropdownItem>
-                            <DropdownItem>Option 2</DropdownItem>
-                            <DropdownItem divider />
-                            <DropdownItem>Reset</DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown> */}
+                <Nav className="visible" navbar>
+                    {navs.map(({ url, label }) => (
+                        <NavItem key={url}>
+                            <NavLink className="cursor-pointer" onClick={() => { setIsOpen(false); setOpenPage(url); }}>
+                                {label}
+                            </NavLink>
+                        </NavItem>
+                    ))}
                 </Nav>
-                {/* <NavbarText>Simple Text</NavbarText> */}
             </Collapse>
         </Navbar>
     );
