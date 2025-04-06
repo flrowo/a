@@ -4,10 +4,10 @@ const reisenAnimationClassName = "reisen-bg-scroll-animation";
 const underlayClassName = "reisen-bg-underlay";
 
 export default function ReisenBG() {
-    return (<>
+    return (<div>
         <style>
             {`
-                .reisen-bg-underlay{
+                .${underlayClassName}{
                     position: fixed;
                     z-index: -2;
                     top: 0;
@@ -50,5 +50,5 @@ export default function ReisenBG() {
         </style>
         <div className={underlayClassName} />
         <div className={reisenAnimationClassName} />
-    </>)
+    </div>)
 }

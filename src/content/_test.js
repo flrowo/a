@@ -96,7 +96,7 @@ const Counter = () => {
     );
 }
 
-const TestComponent = () => {
+export default function TestComponent () {
 
     const containerStyle = {
         position: 'relative',
@@ -142,5 +142,3 @@ const TestComponent = () => {
 
     </>);
 };
-
-export default TestComponent;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardBody, CardHeader, CardText, CardTitle, Row } from 'reactstrap';
 
-const Socials = () => {
+export default function Socials () {
 
     return (
         <Row>
@@ -28,5 +28,3 @@ const Socials = () => {
         </Row>
     );
 }
-
-export default Socials;

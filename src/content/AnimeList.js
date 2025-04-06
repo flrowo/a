@@ -1,20 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Input, Label } from 'reactstrap';
 import axios from 'axios';
 import { flrowoUtils } from '../utils/utils';
 
-// const useMediaQuery = (query) => {
-//     // testing if less than 500px
-//     const mediaMatch = window.matchMedia(query);
-//     const [matches, setMatches] = useState(mediaMatch.matches);
+const useMediaQuery = (query) => {
+    // testing if less than 500px
+    const mediaMatch = window.matchMedia(query);
+    const [matches, setMatches] = useState(mediaMatch.matches);
 
-//     useEffect(() => {
-//         const handler = e => setMatches(e.matches);
-//         mediaMatch.addListener(handler);
-//         return () => mediaMatch.removeListener(handler);
-//     });
-//     return matches;
-// };
+    useEffect(() => {
+        const handler = e => setMatches(e.matches);
+        mediaMatch.addListener(handler);
+        return () => mediaMatch.removeListener(handler);
+    });
+    return matches;
+};
 
 const AnimeCard = ({
     isWatched,
@@ -194,10 +194,26 @@ const saveAnimeList = (jsonStr) => {
     sessionStorage.setItem("flrowo-animelist-last-get", Date.now());
 }
 
+const sorts = [
+    {
+        label: "Name",
+        sortBy: "name",
+    },
+    {
+        label: "End Date",
+        sortBy: "end",
+    },
+    {
+        label: "Score",
+        sortBy: "score",
+    },
+]
+
 export default function AnimeList () {
     
     // testing if less than 500px
-    // const isLessThan = useMediaQuery('(min-width: 500px)');
+    const isLessThan = useMediaQuery('(min-width: 500px)');
+    if (isLessThan === false) console.log("isLessThan", isLessThan);
 
     const [planToWatchList, setPlanToWatchList] = useState([]);
     const [planToWatchListToShow, setPlanToWatchListToShow] = useState([]);
@@ -235,7 +251,7 @@ export default function AnimeList () {
                 axios.get("https://raw.githubusercontent.com/flrowo/db/master/app/animelist.json").then((res) => {
                     console.log("animelist response", res);
 
-                    // just in case it is a .js file, it transforms it into a .json file **workaround**
+                    // **workaround** just in case it is a .js file, it transforms it into a .json file
                     const hyphenIndex = res.data.indexOf('=');
                     const jsonStr = hyphenIndex !== -1 ? res.data.substring(hyphenIndex + 1) : res.data;
 
@@ -320,22 +336,6 @@ export default function AnimeList () {
         // loads anime list upon render, only once
         loadAnimeList();
     }, [loadAnimeList]);
-//
-
-    const sorts = useMemo(() => [
-        {
-            label: "Name",
-            sortBy: "name",
-        },
-        {
-            label: "End Date",
-            sortBy: "end",
-        },
-        {
-            label: "Score",
-            sortBy: "score",
-        },
-    ], []);
     
     const SortButton = useCallback(({ sortBy, id, text }) => {
         return <Button 
@@ -346,12 +346,12 @@ export default function AnimeList () {
     }, [sortAnimeList]);
 
     return (<>
-        <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+        <div className="flex flex-col justify-center">
 
             <div className='h-full w-full bg-white'/>
             {/* filters, search, sorters */}
             <div className="flex flex-row justify-between !gap-5 bg-[#2f2a35aa] p-[10px] rounded-lg shadow-[0_4px_8px_0_rgba(0,0,0,0.2)]">
-                <div className="flex flex-col flex-1 ">
+                <div className="flex flex-col flex-1">
                     <div className="flex flex-row justify-center">
                         <Label>Search</Label>
                     </div>
