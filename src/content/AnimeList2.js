@@ -48,16 +48,27 @@ export default function AnimeList2 () {
         else {
             if (stopRecursive === false) {
                 axios.get("https://raw.githubusercontent.com/flrowo/db/master/app/animelist.json").then((res) => {
+                    if (res.status === 200) {
+                        // **workaround** to get a unique id for each item, since there is no unique identifier for the rendering/mapping 
+                        let id = 0;
+                        res.data.forEach(list => {
+                            list.forEach((item) => item.id = id++);
+                        });
 
-                    // **workaround** just in case it is a .js file, it transforms it into a .json file
-                    const hyphenIndex = res.data.indexOf('=');
-                    const jsonStr = hyphenIndex !== -1 ? res.data.substring(hyphenIndex + 1) : res.data;
-
-                    // saves anime list to storage and the timestamp 
-                    sessionStorage.setItem("flrowo-animelist", JSON.stringify(jsonStr));
-                    sessionStorage.setItem("flrowo-animelist-last-get", Date.now());
-
-                    loadAnimeList(true);
+                        // **workaround** just in case it is a .js file, it transforms it into a .json file
+                        const hyphenIndex = res.data.indexOf('=');
+                        const jsonStr = hyphenIndex !== -1 ? res.data.substring(hyphenIndex + 1) : res.data;
+    
+                        // saves anime list to storage and the timestamp 
+                        sessionStorage.setItem("flrowo-animelist", JSON.stringify(jsonStr));
+                        sessionStorage.setItem("flrowo-animelist-last-get", Date.now());
+    
+                        loadAnimeList(true);
+                    }
+                    else {
+                        console.error("there was an error while trying to fetch animelist data, res.status:", res.status)
+                        alert("there was an error while trying to fetch animelist data");
+                    }
                 });
             }
             else {
@@ -178,13 +189,13 @@ export default function AnimeList2 () {
 
         <br/>
 
-        {/* TODO make possible for categories to collapse and save its state somewhere, using useState, or url (later is cringe..) */}
         {/* anime list */}
+        {/* TODO make possible for categories to collapse and save its state somewhere, using useState, or url (later is cringe..) */}
         <h1>{`PLAN TO WATCH (${planToWatchList.length})`}</h1>
-        {tempPlanToWatchList.map((anime, index) => {
+        {tempPlanToWatchList.map((anime) => {
             return (
                 <AnimeCard
-                    key={index}
+                    key={anime.id}
                     isWatched={false}
                     name={anime.name}
                     img={anime.img}
@@ -194,10 +205,10 @@ export default function AnimeList2 () {
         })}
         <br />
         <h1>{`WATCHED (${watchedList.length})`}</h1>
-        {tempWatchedList.map((anime, index) => {
+        {tempWatchedList.map((anime) => {
             return (
                 <AnimeCard
-                    key={index}
+                    key={anime.id}
                     isWatched={true}
                     name={anime.name}
                     start={anime.start}

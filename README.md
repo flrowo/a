@@ -14,4 +14,4 @@
 - `npm i` (install)
 - `npm start` (dev)
 - `npm run build` (build)
-- `npm run deploy` (deploy)
+- `npm run deploy` (build & deploy)
