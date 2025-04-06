@@ -1,5 +1,11 @@
 # eae
 
+#### TODO
+- toastr lib
+- languages (jp, en, br)
+
+<hr>
+
 > project available at https://flrowo.github.io/a
 
 ## deps/libs
