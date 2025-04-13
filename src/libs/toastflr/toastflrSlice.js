@@ -1,15 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    page: null,
     toastrs: [],
 };
 
-const globalSlice = createSlice({
-    name: 'globalSlice',
+const toastflrSlice = createSlice({
+    name: 'toastflrSlice',
     initialState,
     reducers: {
-        setPage: (state, action) => { state.page = action.payload },
         addToastr: (state, action) => {
             state.toastrs.push(action.payload);
         },
@@ -20,8 +18,7 @@ const globalSlice = createSlice({
 });
 
 export const {
-    setPage,
     addToastr,
     removeToastr,
-} = globalSlice.actions;
-export default globalSlice.reducer;
+} = toastflrSlice.actions;
+export default toastflrSlice.reducer;

@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useUrlManager from '../hooks/useUrlManager.js';
 
-export default function NavigationBar2({ paths = [], selectedPath, setSelectedPath }) {
+export default function NavigationBar2({ paths = [] }) {
     const isWindowLessThan500px = useMediaQuery('(max-width: 500px)');
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const urlManager = useUrlManager();
+    const currentPage = urlManager.page.get();
+
     const renderLinks = () => (
         paths.map((item) => {
-            const isSelected = item.id === selectedPath || (item.isDefault && selectedPath == null);
+            const isSelected = item.id === urlManager.page.get() || (item.isDefault && currentPage == null);
             const className = `${isSelected ? "text-rose-300 font-medium cursor-default" : "text-white cursor-pointer"}`;
             return (
                 <div
@@ -15,8 +19,8 @@ export default function NavigationBar2({ paths = [], selectedPath, setSelectedPa
                     className={className}
                     onClick={() => {
                         if (!isSelected) {
-                            setSelectedPath(item.id);
                             setMenuOpen(false);
+                            urlManager.page.set(item.id);
                         }
                     }}
                 >

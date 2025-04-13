@@ -5,6 +5,7 @@ import NavigationBar2 from '../components/NavigationBar2';
 import TestComponent from './_test';
 import ReisenBG from '../assets/backgrounds/reisen-bg/Reisen';
 import AnimeList2 from './AnimeList2';
+import useUrlManager from '../hooks/useUrlManager';
 
 const paths = [
     {
@@ -74,13 +75,14 @@ const Main = () => {
     //     </div>
     // );
 
-    const [selectedPath, setSelectedPath] = useState();
-    const currentComponent = (paths.find(path => path.id === selectedPath) || paths?.[0])?.component;
+    const urlManager = useUrlManager();
+    const currentPage = urlManager.page.get();
+    const currentComponent = (paths.find(path => path.id === currentPage) || paths?.[0])?.component;
 
     return (
         <div>
             <ReisenBG/>
-            <NavigationBar2 paths={paths} selectedPath={selectedPath} setSelectedPath={setSelectedPath}/>
+            <NavigationBar2 paths={paths}/>
             <div className="flex flex-col h-full p-[80px_10%_20px]">
                 {currentComponent}
             </div>

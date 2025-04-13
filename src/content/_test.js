@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import useToastr from '../libs/toastflr/useToastr';
+import { useSelector } from 'react-redux';
+import ToastrManager from '../libs/toastflr/ToastrManager';
 
 const BPMCounterComponent = () => {
     const [bpm, setBpm] = useState(null);
@@ -97,6 +100,7 @@ const Counter = () => {
 }
 
 export default function TestComponent () {
+    const { addToastr, toastrs } = useToastr();
 
     const containerStyle = {
         position: 'relative',
@@ -139,6 +143,10 @@ export default function TestComponent () {
         <BPMCounterComponent />
 
         <Counter />
+
+        <div>
+            <button onClick={() => { addToastr({ title: "title", msg: "message", className: "bg-red-500 h-[70px] w-[100px] opacity-75" }) }}>show new toastr</button>
+        </div>
 
     </>);
 };
